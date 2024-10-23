@@ -1,0 +1,35 @@
+<div class="mesa-container">
+    <div *ngFor="let mesa of mesas" class="mesa-card" 
+          [ngClass]="{'ocupada':  mesa.status === 'ocupada'}"
+          (click)="abrirFormularioPedido(mesa)">
+      <div class="mesa-icon">
+        <img src="/src/app/assets/icon-mesa.png" alt="Mesa">
+      </div>
+      <h3>{{  mesa.nome }}</h3>
+      <p>Status: {{ mesa.status }}</p>
+      <p>Cliente: {{ mesa.cliente?.nome || 'Nenhum' }}</p>
+      <button *ngIf=" mesa.status === 'disponivel'" (click)="reservarMesa(mesa, $event)">Reservar</button>
+    </div>
+  </div>
+
+<div *ngIf="exibirFormulario" class="pedido-form-tm">
+  <div class="pedido-form">
+    <h2>Adicionar Pedido</h2>
+    <label for="nomeCliente">Nome do Cliente: </label>
+    <input type="text" id="nomeCliente" [(ngModel)]="mesaSelecionada.cliente.nome" placeholder="Nome do Cliente">
+    
+    <label for="nomeMesa">Responsável da Mesa: </label>
+    <input type="text" id="nomeMesa" [(ngModel)]="mesaSelecionada.nome" disabled>
+    
+    <label for="itemPedido">Itens do Pedido: </label>
+    <select [(ngModel)]="itensPedidoSelecionados" multiple>
+      <option *ngFor="let item of itensMenu" [ngValue]="item">{{ item.nome }}</option>
+    </select>
+
+    <label for="nomeFuncionario">Nome do Funcionario: </label>
+    <input type="text" id="nomeFuncionario" [(ngModel)]="funcionarioSelecionado" placeholder="Nome do Funcionario">
+ 
+    <button (click)="salvarPedido()">Salvar Pedido</button>
+    <button (click)="fecharFormulario()" class="red">Cancelar</button>
+  </div>
+</div>

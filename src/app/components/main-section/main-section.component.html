@@ -1,0 +1,12 @@
+<section>
+    <div class="main-content">
+        <h1>Sistema de Gerenciamento de Restaurante</h1>
+        <div class="container-pesquisa">
+            <input type="text" placeholder="Pesquisar...">
+            <img src="/src/app/assets/seach.svg" alt="Buscar" class="pequisa-icon">
+            <button (click)="abrirPedidosFeitos()">Ver Pedidos Realizados</button>
+        </div>
+
+        <app-card-pedidos *ngIf="mostrarPedidos" [pedidos]="pedidos"></app-card-pedidos>
+    </div>
+</section>

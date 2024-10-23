@@ -1,0 +1,53 @@
+section {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    margin-top: 80px;
+}
+
+section .main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    position: relative;
+}
+
+.container-pesquisa {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+input[type="text"] {
+    padding: 10px 40px 10px 20px;
+    width: 100%; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+}
+
+.pequisa-icon {
+    position: absolute;
+    left: 10px; 
+    height: 20px; 
+    width: 20px; 
+    pointer-events: none; 
+    display: block;
+}
+
+button{
+    background-color: #007bff;
+    color: white;
+    font-weight: 550;
+    border: none;
+    margin-left: 20px;
+    padding: 10px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover{
+    background-color: #0056b3;
+}
