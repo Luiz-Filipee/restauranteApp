@@ -2,11 +2,11 @@
     <div class="main-content">
         <h1>Sistema de Gerenciamento de Restaurante</h1>
         <div class="container-pesquisa">
-            <input type="text" placeholder="Pesquisar...">
-            <img src="/src/app/assets/seach.svg" alt="Buscar" class="pequisa-icon">
+            <input (keyup)="pesquisaMesa($event)" type="text" placeholder="Pesquisar...">
+            <img src="/assets/icon-search.svg" alt="Buscar" class="pequisa-icon">
             <button (click)="abrirPedidosFeitos()">Ver Pedidos Realizados</button>
         </div>
 
-        <app-card-pedidos *ngIf="mostrarPedidos" [pedidos]="pedidos"></app-card-pedidos>
+        <app-card-pedidos [mostrar]="mostrarPedidos" [pedidos]="pedidos" (fecharModalEvent)="fecharModal()"></app-card-pedidos>
     </div>
 </section>
