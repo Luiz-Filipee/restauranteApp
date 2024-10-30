@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Pedido } from '../models/pedido.model';
+import { PedidoResponse } from '../models/pedidoResponse.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,19 @@ export class PedidoService {
 
   constructor(private http: HttpClient) { }
 
-  getAllPedidos(): Observable<Pedido[]>{
-    return this.http.get<Pedido[]>(this.apiUrl);
+  getAllPedidos(): Observable<PedidoResponse[]>{
+    return this.http.get<PedidoResponse[]>(this.apiUrl);
   }
 
   realizarPedido(pedido: Pedido): Observable<Pedido>{
     return this.http.post<Pedido>(this.apiUrl, pedido);
+  }
+
+  marcarComoPronto(pedidoId: number): Observable<void>{
+    return this.http.put<void>(`${this.apiUrl}/${pedidoId}/pronto`, {});
+  }
+
+  deletarPedido(pedidoId: number): Observable<void>{
+    return this.http.delete<void>(`${this.apiUrl}/${pedidoId}`);
   }
 }

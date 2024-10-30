@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Mesa } from '../models/mesa.model';
 
 @Injectable({
@@ -9,6 +9,8 @@ import { Mesa } from '../models/mesa.model';
 export class MesaService {
 
   private apiUrl = 'http://localhost:8080/api/mesa';
+  private mesasFiltradasSource = new BehaviorSubject<Mesa[]>([]);
+  mesasFiltradas$ = this.mesasFiltradasSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -16,8 +18,8 @@ export class MesaService {
     return this.http.get<Mesa[]>(this.apiUrl);
   }
 
-  criaMesa(menuItem: Mesa): Observable<Mesa>{
-    return this.http.post<Mesa>(this.apiUrl, menuItem);
+  criaMesa(mesa: Mesa): Observable<Mesa>{
+    return this.http.post<Mesa>(this.apiUrl, mesa);
   }
 
   updateMesa(id: number, mesa: Mesa): Observable<Mesa> {
@@ -26,5 +28,13 @@ export class MesaService {
 
   deletaMesa(id: number): Observable<void>{
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  buscaMesaPeloNomeDoResponsavel(nomeCliente: string): Observable<Mesa[]>{
+    return this.http.get<Mesa[]>(`${this.apiUrl}/${nomeCliente}`);
+  }
+
+  setMesasFiltradas(mesas: Mesa[]) {
+    this.mesasFiltradasSource.next(mesas);
   }
 }

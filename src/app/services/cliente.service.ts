@@ -14,4 +14,8 @@ export class ClienteService {
   buscarClientePorNome(nome: string): Observable<Cliente | null> {
     return this.http.get<Cliente>(`${this.apiUrl}/nome/${nome}`);
   }
+
+  getClientesAll(): Observable<Cliente[]>{
+    return this.http.get<Cliente[]>(this.apiUrl);
+  }
 }
