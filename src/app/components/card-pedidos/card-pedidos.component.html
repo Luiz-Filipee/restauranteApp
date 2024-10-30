@@ -1,14 +1,41 @@
 <div class="modal" *ngIf="mostrar">
-    <div class="modal-content">
+  <div class="modal-content">
       <span class="close" (click)="fecharModal()">&times;</span>
       <h2>Pedidos Realizados</h2>
-      <div *ngFor="let pedido of pedidos" class="pedido-item">
-        <p><strong>ID:</strong> {{ pedido.id }}</p>
-        <p><strong>Status:</strong> {{ pedido.status }}</p>
-        <p><strong>Preço Total:</strong> {{ pedido.precoTotal | currency }}</p>
-        <p><strong>Funcionário:</strong> {{ pedido.funcionario?.nome }}</p>
-        <p><strong>Mesa:</strong> {{ pedido.mesa?.id }}</p>
+      <div class="modal-body">
+          <div class="column">
+              <h3>Resumo do Pedido</h3>
+              <div *ngFor="let pedido of pedidos" class="pedido-item">
+                  <p><strong>Status:</strong> {{ pedido.status }}</p>
+                  <p><strong>Mesa:</strong> {{ pedido.mesa?.id }}</p>
+                  <div *ngIf="pedido.itens && pedido.itens.length > 0">
+                    <p><strong>Itens:</strong></p>
+                    <ul>
+                      <li *ngFor="let item of pedido.itens">
+                        {{ item.nome }} - {{ item.valor | currency }}
+                      </li>
+                    </ul>
+                  </div>
+              </div>
+          </div>
+          <div class="column">
+              <h3>Detalhes do Pedido</h3>
+              <div *ngFor="let pedido of pedidos" class="pedido-detail">
+                  <p><strong>Preço Total:</strong> {{ pedido.precoTotal | currency }}</p>
+                  <p><strong>Funcionário:</strong> {{ pedido.funcionario?.nome }}</p>
+              </div>
+          </div>
+          <div class="column">
+            <h3>Ações</h3>
+            <div *ngFor="let pedido of pedidos" class="pedido-actions">
+                <button (click)="marcarComoPronto(pedido.id)" class="check">
+                  <span class="material-icons">check</span>
+                </button>
+                <button (click)="deletarPedido(pedido.id)" class="delete">
+                  <span class="material-icons">delete</span>
+                </button>
+            </div>
+        </div>            
       </div>
-    </div>
   </div>
-  
+</div>
