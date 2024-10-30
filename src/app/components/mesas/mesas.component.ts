@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Mesa } from '../../models/mesa.model';
 import { MesaService } from '../../services/mesa.service';
 import { MenuItemService } from '../../services/menu-item.service';
-import { MenuItem } from '../../models/menu-item.model';
 import { PedidoService } from '../../services/pedido.service';
 import { Pedido } from '../../models/pedido.model';
 import { Funcionario } from '../../models/funcionario.model';
 import { FuncionarioService } from '../../services/funcionario.service';
 import { ClienteService } from '../../services/cliente.service';
+import { Cliente } from '../../models/cliente.model';
+import { MenuItem } from './../../models/menu-item.model';
 
 @Component({
   selector: 'app-mesas',
@@ -27,6 +28,8 @@ export class MesasComponent implements OnInit{
   itensPedidoSelecionados: MenuItem[] = [];
   itensMenu: MenuItem[] = [];
   funcionarioSelecionado: string = '';
+  formularioTipo: 'pedido' | 'mesa' = 'pedido';
+  clientes: Cliente[] = [];
 
   constructor(
     private mesaService: MesaService, 
@@ -42,7 +45,14 @@ export class MesasComponent implements OnInit{
     });
     this.menuItemService.getItemMenu().subscribe((data: MenuItem[]) => {
       this.itensMenu = data;
-    })
+    });
+    this.clienteService.getClientesAll().subscribe((data: Cliente[]) => {
+      this.clientes = data;
+      console.log(data);
+    });
+    this.mesaService.mesasFiltradas$.subscribe((mesasFiltradas) => {
+      this.mesas = mesasFiltradas; 
+    });
   }
 
   abrirFormularioPedido(mesa: Mesa): void{
@@ -54,6 +64,7 @@ export class MesasComponent implements OnInit{
       pedido: mesa.pedido || [] 
     };
     this.exibirFormulario = true;
+    this.formularioTipo = 'pedido';
   }
 
   buscarClientePorNome(nome: string): void{
@@ -84,9 +95,65 @@ export class MesasComponent implements OnInit{
     this.mesaSelecionada.cliente = { id: 0, nome: '', telefone: '' }; 
     alert(`Mesa ${mesa.nome} reservada!`);
     mesa.status = 'ocupada';
+    // console.log(mesa);
+  }
+
+  deletarMesa(mesa: Mesa, $event: MouseEvent): void{
+    event?.stopPropagation();
+    const confimacao = confirm(`Tem certeza que deseja deletar a mesa "${mesa.nome}"?`);
+    if(confimacao){
+      this.mesaService.deletaMesa(mesa.id).subscribe({
+        next: (response) => {
+          console.log(`Mesa deletada ${mesa}`);
+          this.mesas = this.mesas.filter(m => m.id !== mesa.id);
+        },
+        error: (err) => {
+          console.error('Erro ao deletar mesa:', err);
+          alert('Erro ao deletar mesa, esta associado a outros registros');
+        }
+      });
+    }
+  }
+
+  adicionarMesa(): void{
+    // console.log('clicou');
+    this.exibirFormulario = true;
+    this.formularioTipo = 'mesa';
+    this.mesaSelecionada = { 
+      id: 0, nome: '', 
+      status: 'disponivel', 
+      cliente: { id: 0, nome: '', telefone: '' }, 
+      pedido: []
+    };
+  }
+
+  salvarMesa(): void{
+    if(!this.mesaSelecionada.cliente || !this.mesaSelecionada.cliente.id){
+      alert('Selecione um cliente para associar a mesa.');
+      return;
+    }
+
+    this.mesaService.criaMesa(this.mesaSelecionada).subscribe({
+      next: (mesaCriada) => {
+        this.mesas.push(mesaCriada);
+        this.fecharFormulario();
+        console.log('Mesa criada com sucesso:', mesaCriada);
+      },
+      error: (err) => {
+        console.error('Erro ao criar mesa:', err);
+      }
+    });
+  }
+
+  compareClientes(cliente1: Cliente, cliente2: Cliente): boolean{
+    return cliente1 && cliente2 ? cliente1.id === cliente2.id : cliente1 === cliente2;
   }
 
   salvarPedido(): void{
+    console.log('Mesa Selecionada:', this.mesaSelecionada);
+    console.log('Itens do Pedido Selecionados:', this.itensPedidoSelecionados);
+    console.log('Funcionário Selecionado:', this.funcionarioSelecionado);
+
     if (this.mesaSelecionada && this.itensPedidoSelecionados.length > 0 && this.funcionarioSelecionado) {
       
       this.funcionarioService.buscarFuncionarioPorNome(this.funcionarioSelecionado).subscribe(funcionario => {
@@ -97,7 +164,7 @@ export class MesasComponent implements OnInit{
             itens: this.itensPedidoSelecionados,
             funcionario: funcionario, 
             status: 'pendente',
-            precoTotal: this.itensPedidoSelecionados.reduce((acc, item) => acc + item.valor, 0) // Calcular o preço total
+            precoTotal: this.itensPedidoSelecionados.reduce((acc, item) => acc + item.valor, 0) 
           };
 
           this.pedidoService.realizarPedido(pedido).subscribe(response => {
@@ -116,6 +183,21 @@ export class MesasComponent implements OnInit{
       alert('Preencha todos os campos antes de salvar o pedido.');
     }
   }
+
+  atualizarItensPedido(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedOptions = Array.from(selectElement.selectedOptions) as HTMLOptionElement[];
+  
+    this.itensPedidoSelecionados = selectedOptions
+      .map(option => {
+        const itemId = Number(option.value);
+        return this.itensMenu.find(item => item.id === itemId);
+      })
+      .filter((item): item is MenuItem => item !== undefined);
+  
+    console.log('Itens Selecionados:', this.itensPedidoSelecionados);
+  }
+  
 }
 
 

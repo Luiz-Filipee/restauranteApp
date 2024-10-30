@@ -3,16 +3,28 @@
           [ngClass]="{'ocupada':  mesa.status === 'ocupada'}"
           (click)="abrirFormularioPedido(mesa)">
       <div class="mesa-icon">
-        <img src="/src/app/assets/icon-mesa.png" alt="Mesa">
+        <img src="/assets/icon-table.svg" alt="Mesa">
       </div>
       <h3>{{  mesa.nome }}</h3>
       <p>Status: {{ mesa.status }}</p>
       <p>Cliente: {{ mesa.cliente?.nome || 'Nenhum' }}</p>
-      <button *ngIf=" mesa.status === 'disponivel'" (click)="reservarMesa(mesa, $event)">Reservar</button>
+      <div class="buttons">
+        <button *ngIf=" mesa.status === 'disponivel'" (click)="reservarMesa(mesa, $event)">Reservar</button>
+        <button class="btn-icon" (click)="deletarMesa(mesa, $event)">
+          <span class="material-icons">delete</span>
+        </button>
+      </div>
     </div>
-  </div>
+</div>
 
-<div *ngIf="exibirFormulario" class="pedido-form-tm">
+
+<div class="mesa-card add-mesa-card" (click)="adicionarMesa()">
+  <div class="add-mesa-icon">
+    <span class="material-icons">add</span>
+  </div>
+</div>
+
+<div *ngIf="exibirFormulario && formularioTipo === 'pedido'" class="pedido-form-tm">
   <div class="pedido-form">
     <h2>Adicionar Pedido</h2>
     <label for="nomeCliente">Nome do Cliente: </label>
@@ -22,14 +34,37 @@
     <input type="text" id="nomeMesa" [(ngModel)]="mesaSelecionada.nome" disabled>
     
     <label for="itemPedido">Itens do Pedido: </label>
-    <select [(ngModel)]="itensPedidoSelecionados" multiple>
-      <option *ngFor="let item of itensMenu" [ngValue]="item">{{ item.nome }}</option>
+    <select (change)="atualizarItensPedido($event)" multiple>
+      <option *ngFor="let item of itensMenu" [value]="item.id">{{ item.nome }}</option>
     </select>
 
+    <br>
     <label for="nomeFuncionario">Nome do Funcionario: </label>
     <input type="text" id="nomeFuncionario" [(ngModel)]="funcionarioSelecionado" placeholder="Nome do Funcionario">
  
     <button (click)="salvarPedido()">Salvar Pedido</button>
     <button (click)="fecharFormulario()" class="red">Cancelar</button>
+  </div>
+</div>
+
+<div *ngIf="exibirFormulario && formularioTipo === 'mesa'" class="pedido-form-tm">
+  <div class="pedido-form">
+      <h2>Adicionar Mesa</h2>
+      <label for="nomeMesa">Responsável da Mesa: </label>
+      <input type="text" id="nomeMesa" [(ngModel)]="mesaSelecionada.nome" placeholder="Nome da Mesa">
+      
+      <label for="statusMesa">Status: </label>
+      <select [(ngModel)]="mesaSelecionada.status">
+          <option value="disponivel">Disponível</option>
+          <option value="ocupada">Ocupada</option>
+      </select>
+
+      <label for="idCliente">Cliente: </label>
+      <select [(ngModel)]="mesaSelecionada.cliente" [compareWith]="compareClientes">
+        <option *ngFor="let cliente of clientes" [ngValue]="cliente">{{ cliente.nome }}</option>
+      </select>
+
+      <button (click)="salvarMesa()">Salvar Mesa</button>
+      <button (click)="fecharFormulario()" class="red">Cancelar</button>
   </div>
 </div>
