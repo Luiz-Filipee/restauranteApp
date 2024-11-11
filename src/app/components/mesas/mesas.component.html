@@ -1,26 +1,26 @@
 <div class="mesa-container">
-    <div *ngFor="let mesa of mesas" class="mesa-card" 
-          [ngClass]="{'ocupada':  mesa.status === 'ocupada'}"
-          (click)="abrirFormularioPedido(mesa)">
-      <div class="mesa-icon">
-        <img src="/assets/icon-table.svg" alt="Mesa">
-      </div>
-      <h3>{{  mesa.nome }}</h3>
-      <p>Status: {{ mesa.status }}</p>
-      <p>Cliente: {{ mesa.cliente?.nome || 'Nenhum' }}</p>
-      <div class="buttons">
-        <button *ngIf=" mesa.status === 'disponivel'" (click)="reservarMesa(mesa, $event)">Reservar</button>
-        <button class="btn-icon" (click)="deletarMesa(mesa, $event)">
-          <span class="material-icons">delete</span>
-        </button>
-      </div>
+  <div *ngFor="let mesa of mesas" class="mesa-card" 
+        [ngClass]="{'ocupada': mesa.status === 'ocupada'}"
+        (click)="abrirFormularioPedido(mesa)">
+    <div class="mesa-icon">
+      <img src="/assets/icon-table.svg" alt="Mesa">
     </div>
-</div>
+    <h3>{{ mesa.nome }}</h3>
+    <p>Status: {{ mesa.status }}</p>
+    <p>Cliente: {{ mesa.cliente?.nome || 'Nenhum' }}</p>
+    <div class="buttons">
+      <button *ngIf="mesa.status === 'disponivel'" (click)="reservarMesa(mesa, $event)">Reservar</button>
+      <button class="btn-icon" (click)="deletarMesa(mesa, $event)">
+        <span class="material-icons">delete</span>
+      </button>
+    </div>
+  </div>
 
-
-<div class="mesa-card add-mesa-card" (click)="adicionarMesa()">
-  <div class="add-mesa-icon">
-    <span class="material-icons">add</span>
+  <div class="mesa-card add-mesa-card" (click)="adicionarMesa()">
+    <div class="add-mesa-icon">
+      <span class="material-icons">add</span>
+    </div>
+    <h3>Adicionar Mesa</h3>
   </div>
 </div>
 
