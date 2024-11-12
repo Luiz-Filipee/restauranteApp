@@ -31,6 +31,8 @@ export class MesasComponent implements OnInit{
   formularioTipo: 'pedido' | 'mesa' = 'pedido';
   clientes: Cliente[] = [];
   funcionarios: Funcionario[] = [];
+  maxMesas = 3;
+  mesasRestantes = this.maxMesas
 
   constructor(
     private mesaService: MesaService, 
@@ -56,6 +58,13 @@ export class MesasComponent implements OnInit{
     });
     this.funcionarioService.getFuncionariosAll().subscribe((data: Funcionario[]) => {
       this.funcionarios = data;
+    });
+  }
+
+  atualizarMesas(){
+    this.mesaService.getMesa().subscribe(mesas => {
+      this.mesas = mesas;
+      this.mesasRestantes = this.maxMesas - this.mesas.length; 
     });
   }
 
@@ -103,8 +112,8 @@ export class MesasComponent implements OnInit{
     // console.log(mesa);
   }
 
-  deletarMesa(mesa: Mesa, $event: MouseEvent): void{
-    event?.stopPropagation();
+  deletarMesa(mesa: Mesa, event: MouseEvent): void{
+    event.stopPropagation();
     const confimacao = confirm(`Tem certeza que deseja deletar a mesa "${mesa.nome}"?`);
     if(confimacao){
       this.mesaService.deletaMesa(mesa.id).subscribe({
@@ -122,6 +131,10 @@ export class MesasComponent implements OnInit{
 
   adicionarMesa(): void{
     // console.log('clicou');
+    if(this.mesasRestantes <= 0){
+      alert('Capacidade máxima de mesas atingida!');
+      return;
+    }
     this.exibirFormulario = true;
     this.formularioTipo = 'mesa';
     this.mesaSelecionada = { 
@@ -130,6 +143,10 @@ export class MesasComponent implements OnInit{
       cliente: { id: 0, nome: '', telefone: '' }, 
       pedido: []
     };
+  }
+
+  verificarCapacidade(): string {
+    return this.mesasRestantes <= 0 ? 'Restaurante Cheio' : `${this.mesasRestantes} mesas restantes`;
   }
 
   salvarMesa(): void{
@@ -141,6 +158,7 @@ export class MesasComponent implements OnInit{
     this.mesaService.criaMesa(this.mesaSelecionada).subscribe({
       next: (mesaCriada) => {
         this.mesas.push(mesaCriada);
+        this.mesasRestantes = this.maxMesas - this.mesas.length;
         this.fecharFormulario();
         console.log('Mesa criada com sucesso:', mesaCriada);
       },

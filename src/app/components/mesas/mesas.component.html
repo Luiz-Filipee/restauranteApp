@@ -1,3 +1,4 @@
+<h3>Quantidade de mesas disponiveis: {{ mesasRestantes }}</h3>
 <div class="mesa-container">
   <div *ngFor="let mesa of mesas" class="mesa-card" 
         [ngClass]="{'ocupada': mesa.status === 'ocupada'}"
@@ -5,13 +6,11 @@
     <div class="mesa-icon">
       <img src="/assets/icon-table.svg" alt="Mesa">
     </div>
-<<<<<<< HEAD
-    <div class="mesa-card add-mesa-card" (click)="adicionarMesa()">
+    <!-- <div class="mesa-card add-mesa-card" (click)="adicionarMesa()">
       <div class="add-mesa-icon">
         <span class="material-icons">add</span>
       </div>
-    </div>    
-=======
+    </div>     -->
     <h3>{{ mesa.nome }}</h3>
     <p>Status: {{ mesa.status }}</p>
     <p>Cliente: {{ mesa.cliente?.nome || 'Nenhum' }}</p>
@@ -29,7 +28,6 @@
     </div>
     <h3>Adicionar Mesa</h3>
   </div>
->>>>>>> 35f1286eda9fd27abf060bf256320f2ef08b6e4d
 </div>
 
 <div *ngIf="exibirFormulario && formularioTipo === 'pedido'" class="pedido-form-tm">
@@ -49,7 +47,7 @@
     <br>
     <label for="nomeFuncionario">Funcionario: </label>
       <select  [(ngModel)]="funcionarioSelecionado">
-        <option *ngFor="let funcionario of funcionarios" [ngValue]="funcionario">{{ funcionario.nome }}</option>
+        <option *ngFor="let funcionario of funcionarios" [ngValue]="funcionario.nome">{{ funcionario.nome }}</option>
       </select>
  
     <button (click)="salvarPedido()">Salvar Pedido</button>
