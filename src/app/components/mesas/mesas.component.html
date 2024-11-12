@@ -15,13 +15,11 @@
         </button>
       </div>
     </div>
-</div>
-
-
-<div class="mesa-card add-mesa-card" (click)="adicionarMesa()">
-  <div class="add-mesa-icon">
-    <span class="material-icons">add</span>
-  </div>
+    <div class="mesa-card add-mesa-card" (click)="adicionarMesa()">
+      <div class="add-mesa-icon">
+        <span class="material-icons">add</span>
+      </div>
+    </div>    
 </div>
 
 <div *ngIf="exibirFormulario && formularioTipo === 'pedido'" class="pedido-form-tm">
@@ -39,8 +37,10 @@
     </select>
 
     <br>
-    <label for="nomeFuncionario">Nome do Funcionario: </label>
-    <input type="text" id="nomeFuncionario" [(ngModel)]="funcionarioSelecionado" placeholder="Nome do Funcionario">
+    <label for="nomeFuncionario">Funcionario: </label>
+      <select  [(ngModel)]="funcionarioSelecionado">
+        <option *ngFor="let funcionario of funcionarios" [ngValue]="funcionario">{{ funcionario.nome }}</option>
+      </select>
  
     <button (click)="salvarPedido()">Salvar Pedido</button>
     <button (click)="fecharFormulario()" class="red">Cancelar</button>
@@ -60,7 +60,7 @@
       </select>
 
       <label for="idCliente">Cliente: </label>
-      <select [(ngModel)]="mesaSelecionada.cliente" [compareWith]="compareClientes">
+      <select  [(ngModel)]="mesaSelecionada.cliente" [compareWith]="compareClientes">
         <option *ngFor="let cliente of clientes" [ngValue]="cliente">{{ cliente.nome }}</option>
       </select>
 
