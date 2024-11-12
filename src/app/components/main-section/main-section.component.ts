@@ -4,6 +4,7 @@ import { PedidoService } from '../../services/pedido.service';
 import { PedidoResponse } from '../../models/pedidoResponse.model';
 import { MesaService } from '../../services/mesa.service';
 import { Mesa } from '../../models/mesa.model';
+import { empty } from 'rxjs';
 
 @Component({
   selector: 'app-main-section',
@@ -30,15 +31,22 @@ export class MainSectionComponent{
 
   pesquisaMesa(event: KeyboardEvent){
     const textoPesquisa = (event.target as HTMLInputElement).value;
-    // console.log(textoPesquisa);
-    this.mesaService.buscaMesaPeloNomeDoResponsavel(textoPesquisa).subscribe(mesas => {
-      if(mesas && mesas.length > 0){
+
+    if(textoPesquisa.trim() === ""){
+      this.mesaService.getMesa().subscribe(mesas => {
         this.mesaService.setMesasFiltradas(mesas);
-      }else{
-        this.mesaService.setMesasFiltradas([]);
-      }
-      console.log(this.mesasFiltradas);
-    });
+      });
+    }else{
+      // console.log(textoPesquisa);
+      this.mesaService.buscaMesaPeloNomeDoResponsavel(textoPesquisa).subscribe(mesas => {
+        if(mesas && mesas.length > 0){
+          this.mesaService.setMesasFiltradas(mesas);
+        }else{
+          this.mesaService.setMesasFiltradas([]);
+        }
+        console.log(this.mesasFiltradas);
+      });
+    }    
   }
 
   fecharModal(): void{
