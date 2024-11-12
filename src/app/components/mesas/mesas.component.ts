@@ -30,6 +30,7 @@ export class MesasComponent implements OnInit{
   funcionarioSelecionado: string = '';
   formularioTipo: 'pedido' | 'mesa' = 'pedido';
   clientes: Cliente[] = [];
+  funcionarios: Funcionario[] = [];
 
   constructor(
     private mesaService: MesaService, 
@@ -52,6 +53,9 @@ export class MesasComponent implements OnInit{
     });
     this.mesaService.mesasFiltradas$.subscribe((mesasFiltradas) => {
       this.mesas = mesasFiltradas; 
+    });
+    this.funcionarioService.getFuncionariosAll().subscribe((data: Funcionario[]) => {
+      this.funcionarios = data;
     });
   }
 
@@ -90,6 +94,7 @@ export class MesasComponent implements OnInit{
     this.exibirFormulario = false;
     this.itensPedidoSelecionados = [];
   }
+
   reservarMesa(mesa: Mesa, event: Event): void{
     event.stopPropagation();
     this.mesaSelecionada.cliente = { id: 0, nome: '', telefone: '' }; 
@@ -155,7 +160,7 @@ export class MesasComponent implements OnInit{
     console.log('Funcionário Selecionado:', this.funcionarioSelecionado);
 
     if (this.mesaSelecionada && this.itensPedidoSelecionados.length > 0 && this.funcionarioSelecionado) {
-      
+
       this.funcionarioService.buscarFuncionarioPorNome(this.funcionarioSelecionado).subscribe(funcionario => {
         if (funcionario) {
           const pedido: Pedido = {
@@ -185,17 +190,19 @@ export class MesasComponent implements OnInit{
   }
 
   atualizarItensPedido(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedOptions = Array.from(selectElement.selectedOptions) as HTMLOptionElement[];
+    const elementoSelecionado = event.target as HTMLSelectElement;
+    const opcoesSelect = Array.from(elementoSelecionado.selectedOptions) as HTMLOptionElement[];
   
-    this.itensPedidoSelecionados = selectedOptions
-      .map(option => {
-        const itemId = Number(option.value);
-        return this.itensMenu.find(item => item.id === itemId);
-      })
-      .filter((item): item is MenuItem => item !== undefined);
-  
-    console.log('Itens Selecionados:', this.itensPedidoSelecionados);
+    opcoesSelect.forEach(opcao => {
+      const itemId = Number(opcao.value);
+      const item = this.itensMenu.find(menuItem => menuItem.id === itemId);
+
+      if(item && !this.itensPedidoSelecionados.some(elementoSelecionado => elementoSelecionado.id === item.id)){
+        this.itensPedidoSelecionados.push(item);
+      }
+    });
+
+    console.log('Itens selecionados: ', this.itensPedidoSelecionados);
   }
   
 }
