@@ -19,21 +19,23 @@ export class CardPedidosComponent {
     this.fecharModalEvent.emit();
   }
 
-  marcarComoPronto(pedidoId: number): void{
-    if(pedidoId !== undefined){
-      this.pedidoService.marcarComoPronto(pedidoId).subscribe(response => {
-        const pedidoAtualizado = this.pedidos.find(p => p.id === pedidoId);
-        if (pedidoAtualizado) {
-          pedidoAtualizado.status = 'Pronto'; 
-          console.log(pedidoId);
-        }
-      }, error => {
-        console.error('Erro ao marcar pedido como pronto:', error);
-      });
-    }else{
-      console.error('ID do pedido esta undefined');
+  marcarComoPronto(pedidoId: number): void {
+    console.log(pedidoId);
+    if (pedidoId !== undefined && pedidoId > 0) {
+        this.pedidoService.marcarComoPronto(pedidoId).subscribe(response => {
+            const pedidoAtualizado = this.pedidos.find(p => p.id === pedidoId);
+            if (pedidoAtualizado) {
+                pedidoAtualizado.status = response.pedido.status; 
+                console.log(`Pedido ${pedidoId} atualizado para status: Pronto`);
+            }
+        }, error => {
+            console.error('Erro ao marcar pedido como pronto:', error);
+        });
+    } else {
+        console.error('ID do pedido é inválido:', pedidoId);
     }
   }
+
 
   deletarPedido(pedidoId: number): void{
       this.pedidoService.deletarPedido(pedidoId).subscribe(response => {

@@ -22,8 +22,7 @@ export class MesasComponent implements OnInit{
     id: 0, 
     cliente: { id: 0, nome: '', telefone: '' }, 
     nome: '',
-    status: 'livre',
-    pedido: [] 
+    status: 'livre'
 };
   itensPedidoSelecionados: MenuItem[] = [];
   itensMenu: MenuItem[] = [];
@@ -45,9 +44,11 @@ export class MesasComponent implements OnInit{
   ngOnInit(): void {
     this.mesaService.getMesa().subscribe((data: Mesa[]) => {
       this.mesas = data;
+      console.log(data);
     });
     this.menuItemService.getItemMenu().subscribe((data: MenuItem[]) => {
       this.itensMenu = data;
+      console.log(data);
     });
     this.clienteService.getClientesAll().subscribe((data: Cliente[]) => {
       this.clientes = data;
@@ -55,9 +56,12 @@ export class MesasComponent implements OnInit{
     });
     this.mesaService.mesasFiltradas$.subscribe((mesasFiltradas) => {
       this.mesas = mesasFiltradas; 
+      console.log(mesasFiltradas);
+
     });
     this.funcionarioService.getFuncionariosAll().subscribe((data: Funcionario[]) => {
       this.funcionarios = data;
+      console.log(data);
     });
   }
 
@@ -73,8 +77,7 @@ export class MesasComponent implements OnInit{
       id: mesa.id, 
       cliente: { id: 0, nome: '', telefone: '' }, 
       nome: mesa.nome, 
-      status: mesa.status,
-      pedido: mesa.pedido || [] 
+      status: mesa.status
     };
     this.exibirFormulario = true;
     this.formularioTipo = 'pedido';
@@ -97,8 +100,7 @@ export class MesasComponent implements OnInit{
       id: 0, 
       cliente: { id: 0, nome: '', telefone: '' }, 
       nome: '', 
-      status: '', 
-      pedido: [] 
+      status: ''
     };
     this.exibirFormulario = false;
     this.itensPedidoSelecionados = [];
@@ -115,15 +117,21 @@ export class MesasComponent implements OnInit{
   deletarMesa(mesa: Mesa, event: MouseEvent): void{
     event.stopPropagation();
     const confimacao = confirm(`Tem certeza que deseja deletar a mesa "${mesa.nome}"?`);
+    console.log(mesa);
     if(confimacao){
+      console.log(`mesa id ${mesa.id}`);
       this.mesaService.deletaMesa(mesa.id).subscribe({
         next: (response) => {
-          console.log(`Mesa deletada ${mesa}`);
+          console.log(`Mesa deletada ${mesa.id}`);
           this.mesas = this.mesas.filter(m => m.id !== mesa.id);
         },
         error: (err) => {
           console.error('Erro ao deletar mesa:', err);
-          alert('Erro ao deletar mesa, esta associado a outros registros');
+          if (err.error && err.error.error) {
+              alert(`Erro ao deletar mesa: ${err.error.error}`);
+          } else {
+              alert('Erro desconhecido ao deletar a mesa');
+          }
         }
       });
     }
@@ -138,10 +146,10 @@ export class MesasComponent implements OnInit{
     this.exibirFormulario = true;
     this.formularioTipo = 'mesa';
     this.mesaSelecionada = { 
-      id: 0, nome: '', 
+      id: 0, 
+      nome: '', 
       status: 'disponivel', 
       cliente: { id: 0, nome: '', telefone: '' }, 
-      pedido: []
     };
   }
 
@@ -155,7 +163,15 @@ export class MesasComponent implements OnInit{
       return;
     }
 
-    this.mesaService.criaMesa(this.mesaSelecionada).subscribe({
+    const mesaData = {
+      id: this.mesaSelecionada.id,
+      nome: this.mesaSelecionada.nome,
+      status: this.mesaSelecionada.status,
+      cliente_id: this.mesaSelecionada.cliente.id 
+    };
+    console.log(mesaData);
+
+    this.mesaService.criaMesa(mesaData).subscribe({
       next: (mesaCriada) => {
         this.mesas.push(mesaCriada);
         this.mesasRestantes = this.maxMesas - this.mesas.length;
@@ -177,10 +193,16 @@ export class MesasComponent implements OnInit{
     console.log('Itens do Pedido Selecionados:', this.itensPedidoSelecionados);
     console.log('Funcionário Selecionado:', this.funcionarioSelecionado);
 
+    if(!this.mesaSelecionada.id || this.mesaSelecionada.id === 0){
+      alert('Mesa nao selecionada. Por favor, selecione uma mesa valida.');
+      return;
+    }
+
     if (this.mesaSelecionada && this.itensPedidoSelecionados.length > 0 && this.funcionarioSelecionado) {
 
       this.funcionarioService.buscarFuncionarioPorNome(this.funcionarioSelecionado).subscribe(funcionario => {
         if (funcionario) {
+      
           const pedido: Pedido = {
             id: 0,
             mesa: this.mesaSelecionada,
@@ -189,6 +211,7 @@ export class MesasComponent implements OnInit{
             status: 'pendente',
             precoTotal: this.itensPedidoSelecionados.reduce((acc, item) => acc + item.valor, 0) 
           };
+          console.log(pedido);
 
           this.pedidoService.realizarPedido(pedido).subscribe(response => {
             console.log('Pedido salvo com sucesso', response);

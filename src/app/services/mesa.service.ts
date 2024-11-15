@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Mesa } from '../models/mesa.model';
+import { environment } from '../../environments/environmento';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MesaService {
 
-  private apiUrl = 'http://localhost:8080/api/mesa';
+  private apiUrl = `${environment.apiUrl}/mesas`;
   private mesasFiltradasSource = new BehaviorSubject<Mesa[]>([]);
   mesasFiltradas$ = this.mesasFiltradasSource.asObservable();
 
@@ -18,8 +19,8 @@ export class MesaService {
     return this.http.get<Mesa[]>(this.apiUrl);
   }
 
-  criaMesa(mesa: Mesa): Observable<Mesa>{
-    return this.http.post<Mesa>(this.apiUrl, mesa);
+  criaMesa(mesaData: { id: number; nome: string; status: string; cliente_id: number }): Observable<Mesa> {
+    return this.http.post<Mesa>(this.apiUrl, mesaData);
   }
 
   updateMesa(id: number, mesa: Mesa): Observable<Mesa> {

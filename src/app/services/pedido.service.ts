@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Pedido } from '../models/pedido.model';
 import { PedidoResponse } from '../models/pedidoResponse.model';
+import { environment } from '../../environments/environmento';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PedidoService {
-  private apiUrl = 'http://localhost:8080/api/pedidos'
+  private apiUrl = `${environment.apiUrl}/pedidos`;
 
   constructor(private http: HttpClient) { }
 
@@ -20,9 +21,9 @@ export class PedidoService {
     return this.http.post<Pedido>(this.apiUrl, pedido);
   }
 
-  marcarComoPronto(pedidoId: number): Observable<void>{
-    return this.http.put<void>(`${this.apiUrl}/${pedidoId}/pronto`, {});
-  }
+  marcarComoPronto(pedidoId: number): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${pedidoId}/pronto`, {});
+}
 
   deletarPedido(pedidoId: number): Observable<void>{
     return this.http.delete<void>(`${this.apiUrl}/${pedidoId}`);
