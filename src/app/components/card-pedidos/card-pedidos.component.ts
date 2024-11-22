@@ -20,7 +20,6 @@ export class CardPedidosComponent {
   }
 
   marcarComoPronto(pedidoId: number): void{
-    console.log(pedidoId);
     if(pedidoId !== undefined){
       this.pedidoService.marcarComoPronto(pedidoId).subscribe(response => {
         const pedidoAtualizado = this.pedidos.find(p => p.id === pedidoId);
@@ -35,6 +34,7 @@ export class CardPedidosComponent {
       console.error('ID do pedido esta undefined');
     }
   }
+
 
   deletarPedido(pedidoId: number): void{
       this.pedidoService.deletarPedido(pedidoId).subscribe(response => {

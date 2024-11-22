@@ -41,7 +41,7 @@
     
     <label for="itemPedido">Itens do Pedido: </label>
     <select (change)="atualizarItensPedido($event)" multiple>
-      <option *ngFor="let item of itensMenu" [value]="item.id">{{ item.nome }}</option>
+      <option *ngFor="let item of itensMenu" [value]="item.id">{{ item.descricao }}</option>
     </select>
 
     <br>
@@ -68,7 +68,7 @@
       </select>
 
       <label for="idCliente">Cliente: </label>
-      <select  [(ngModel)]="mesaSelecionada.cliente" [compareWith]="compareClientes">
+      <select [(ngModel)]="mesaSelecionada.cliente" [compareWith]="compareClientes">
         <option *ngFor="let cliente of clientes" [ngValue]="cliente">{{ cliente.nome }}</option>
       </select>
 
