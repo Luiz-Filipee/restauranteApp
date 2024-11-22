@@ -20,6 +20,7 @@ export class CardPedidosComponent {
   }
 
   marcarComoPronto(pedidoId: number): void{
+    console.log(pedidoId);
     if(pedidoId !== undefined){
       this.pedidoService.marcarComoPronto(pedidoId).subscribe(response => {
         const pedidoAtualizado = this.pedidos.find(p => p.id === pedidoId);

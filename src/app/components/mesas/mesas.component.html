@@ -36,7 +36,7 @@
     <label for="nomeCliente">Nome do Cliente: </label>
     <input type="text" id="nomeCliente" [(ngModel)]="mesaSelecionada.cliente.nome" placeholder="Nome do Cliente">
     
-    <label for="nomeMesa">Responsável da Mesa: </label>
+    <label for="nomeMesa">Nome da Mesa: </label>
     <input type="text" id="nomeMesa" [(ngModel)]="mesaSelecionada.nome" disabled>
     
     <label for="itemPedido">Itens do Pedido: </label>
@@ -58,7 +58,7 @@
 <div *ngIf="exibirFormulario && formularioTipo === 'mesa'" class="pedido-form-tm">
   <div class="pedido-form">
       <h2>Adicionar Mesa</h2>
-      <label for="nomeMesa">Responsável da Mesa: </label>
+      <label for="nomeMesa">Nome da Mesa: </label>
       <input type="text" id="nomeMesa" [(ngModel)]="mesaSelecionada.nome" placeholder="Nome da Mesa">
       
       <label for="statusMesa">Status: </label>

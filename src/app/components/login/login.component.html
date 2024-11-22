@@ -1,0 +1,16 @@
+<div *ngIf="exibirFormulario" class="login-form-tm">
+    <div class="login-form">
+      <h2>Login ou Cadastro</h2>
+      <label for="username">Usuário:</label>
+      <input type="text" id="username" [(ngModel)]="autenticacaoUser.username" placeholder="Usuário">
+  
+      <label for="password">Senha:</label>
+      <input type="password" id="password" [(ngModel)]="autenticacaoUser.password" placeholder="Senha">
+  
+      <button (click)="onLogin()" class="btn-acoes">Login</button>
+      <button (click)="onCadastro()" class="btn-acoes">Cadastro</button>
+      
+      <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p> 
+    </div>
+  </div>
+  

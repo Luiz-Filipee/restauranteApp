@@ -18,4 +18,8 @@ export class ClienteService {
   getClientesAll(): Observable<Cliente[]>{
     return this.http.get<Cliente[]>(this.apiUrl);
   }
+
+  criaCliente(cliente: Cliente): Observable<Cliente>{
+    return this.http.post<Cliente>(this.apiUrl, cliente);
+  }
 }

@@ -15,4 +15,8 @@ export class FuncionarioService {
   buscarFuncionarioPorNome(nome: string): Observable<Funcionario | null> {
     return this.http.get<Funcionario>(`${this.apiUrl}/${nome}`);
   }
+
+  getFuncionariosAll(): Observable<Funcionario[]>{
+    return this.http.get<Funcionario[]>(this.apiUrl);
+  }
 }

@@ -5,8 +5,29 @@
             <input (keyup)="pesquisaMesa($event)" type="text" placeholder="Pesquisar...">
             <img src="/assets/icon-search.svg" alt="Buscar" class="pequisa-icon">
             <button (click)="abrirPedidosFeitos()">Ver Pedidos Realizados</button>
+            <button (click)="adicionarCliente()">Adicionar Cliente</button>
+            <div class="logout">
+              <div class="logout-icon-container">
+                <img (click)="onLogout()" src="/assets/icon-logout.svg" alt="logout" class="logout-icon">
+                <p (click)="onLogout()">Logout</p>
+              </div>
+            </div>
         </div>
 
         <app-card-pedidos [mostrar]="mostrarPedidos" [pedidos]="pedidos" (fecharModalEvent)="fecharModal()"></app-card-pedidos>
     </div>
+
+    <div *ngIf="exibirFormulario" class="cliente-form-tm">
+        <div class="cliente-form">
+          <h2>Adicionar Cliente</h2>
+          <label for="nomeCliente">Nome:</label>
+          <input type="text" id="nomeCliente" [(ngModel)]="novoCliente.nome" placeholder="Nome do Cliente">
+          
+          <label for="nomeCliente">Telefone:</label>
+          <input type="text" id="telefoneCliente" [(ngModel)]="novoCliente.telefone" placeholder="Telefone do Cliente">
+       
+          <button (click)="salvarCliente()" class="btn-acoes">Salvar Cliente</button>
+          <button (click)="fecharFormulario()" class="btn-acoes red">Cancelar</button>
+        </div>
+      </div>
 </section>

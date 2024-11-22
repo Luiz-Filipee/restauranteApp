@@ -7,6 +7,7 @@ import { MainSectionComponent } from '../main-section/main-section.component';
 import { MesasComponent } from '../mesas/mesas.component';
 import { FormsModule } from '@angular/forms';  // Import FormsModule
 import { CardPedidosComponent } from '../card-pedidos/card-pedidos.component';
+import { LoginComponent } from '../login/login.component';
 
 
 
@@ -16,7 +17,8 @@ import { CardPedidosComponent } from '../card-pedidos/card-pedidos.component';
     MainSectionComponent,
     MesasComponent,
     MenuListComponent,
-    CardPedidosComponent
+    CardPedidosComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
