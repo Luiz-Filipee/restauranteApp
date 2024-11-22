@@ -8,7 +8,7 @@ import { environment } from '../../environments/environmento';
   providedIn: 'root'
 })
 export class MenuItemService {
-  private apiUrl = `${environment.apiUrl}/itens`;
+  private apiUrl = `http://localhost:8080/api/menu`;
 
   constructor(private http: HttpClient) { }
 

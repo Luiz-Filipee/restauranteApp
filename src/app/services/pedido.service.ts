@@ -9,7 +9,7 @@ import { environment } from '../../environments/environmento';
   providedIn: 'root'
 })
 export class PedidoService {
-  private apiUrl = `${environment.apiUrl}/pedidos`;
+  private apiUrl = `http://localhost:8080/api/pedidos`;
 
   constructor(private http: HttpClient) { }
 

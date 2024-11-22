@@ -9,7 +9,7 @@ import { environment } from '../../environments/environmento';
 })
 export class MesaService {
 
-  private apiUrl = `${environment.apiUrl}/mesas`;
+  private apiUrl = `http://localhost:8080/api/mesa`;
   private mesasFiltradasSource = new BehaviorSubject<Mesa[]>([]);
   mesasFiltradas$ = this.mesasFiltradasSource.asObservable();
 

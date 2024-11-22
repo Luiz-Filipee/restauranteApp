@@ -8,7 +8,7 @@ import { environment } from '../../environments/environmento';
   providedIn: 'root'
 })
 export class ClienteService {
-  private apiUrl = `${environment.apiUrl}/clientes`;
+  private apiUrl = `http://localhost:8080/api/cliente`;
 
   constructor(private http: HttpClient) {}
 
